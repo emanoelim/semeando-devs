@@ -228,6 +228,7 @@ def get_all():
             'data': data,
         }
         return resposta, 200
+    
     else:
         request_data = request.get_json()
         titulo = request_data.get('titulo')
@@ -262,6 +263,7 @@ def get_id(id):
             'data': data,
         }
         return resposta, 200
+    
     else:
         request_data = request.get_json()
         titulo = request_data.get('titulo')
@@ -292,6 +294,7 @@ def get_id(id):
             'data': data,
         }
         return resposta, 200
+    
     elif request.method == 'PUT':
         request_data = request.get_json()
         titulo = request_data.get('titulo')
@@ -303,6 +306,7 @@ def get_id(id):
             'data': data,
         }
         return resposta, 200
+    
     else:
         data = playlist.exclui_musica(int(id))
         resposta = {
