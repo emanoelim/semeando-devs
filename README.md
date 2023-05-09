@@ -415,11 +415,13 @@ Podemos testar as operações com id novamente para verificar o retorno 404, bas
 
 ### Trabalhos futuros
 
-Esta API foi feita de forma bem manual, para entendimento dos métodos HTTP. Futuramente, vamos utilizar algumas funcionalidades prontas para 
+* Esta API foi feita de forma bem manual, para entendimento dos métodos HTTP. Futuramente, vamos utilizar algumas funcionalidades prontas para 
 faciltiar o trabalho.
 
-Também devem ser adicionadas validações antes de criar/atualizar um objeto, garantindo que os dados informados pelo usuário nas chamadas de POST/PUT estejam de
+* Também devem ser adicionadas validações antes de criar/atualizar um objeto, garantindo que os dados informados pelo usuário nas chamadas de POST/PUT estejam de
 acordo com o esperado.
+
+* Estamos retornando todos os dados no GET, isso se torna um problema quando existir uma grande quantidade de dados. Futuramente será adequado retornar os dados paginados.
 
 
 
