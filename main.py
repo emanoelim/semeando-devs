@@ -72,6 +72,6 @@ def musicas_id(id):
 if __name__ == '__main__':
     playlist = Playlist()
     playlist.adiciona_musica('burning out', 'bad omens')
-    playlist.adiciona_musica('traced in constallations', 'sleepmakewaves')
+    playlist.adiciona_musica('traced in constellations', 'sleepmakewaves')
     playlist.adiciona_musica('venger', 'perturbator')
     app.run()

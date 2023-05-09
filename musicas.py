@@ -21,7 +21,7 @@ class Playlist:
     __contador = 0
 
     def adiciona_musica(self, titulo, artista, album=None, ano=None):
-        musica = Musica(self.contador, titulo, artista, album, ano)
+        musica = Musica(self.__contador, titulo, artista, album, ano)
         self.musicas.append(musica)
         self.__contador += 1
         return musica.serialize()
