@@ -183,6 +183,18 @@ Os métodos da playlist podem ser atualizados para ter o retorno adequado:
         return None
 ```
 
+### Adicionando alguns dados
+Vamos criar uma playlist inicial no arquivo **main.py**:
+
+```python
+if __name__ == '__main__':
+    playlist = Playlist()
+    playlist.adiciona_musica('burning out', 'bad omens')
+    playlist.adiciona_musica('traced in constellations', 'sleepmakewaves')
+    playlist.adiciona_musica('venger', 'perturbator')
+    app.run()
+```
+
 ### Criando endpoint para o GET
 No arquivo **main.py** adicionar a seguinte função após a função **hello()**:
 
