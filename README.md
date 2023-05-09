@@ -315,7 +315,7 @@ def get_id(id):
         return resposta, 204
 ```
 
-O status 204 (No content) indica que o objeto não existe mais.
+O status 204 (No content) indica que o objeto não existe mais:
 
 Para testar:
 * `requests.delete(url='http://127.0.0.1:5000/musicas/2')]`.
