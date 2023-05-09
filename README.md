@@ -372,7 +372,7 @@ Após esta alteração, as funções abaixo podem ser refatoradas, evitando repe
 Também vamos aproveitar o método para atualizar os endpoints **musicas/id** para que já retornem um erro 404 (Not found) no caso de objeto informado não existir:
 
 ```python
- @app.route('/musicas/<id>', methods=['GET', 'PUT', 'DELETE'])
+@app.route('/musicas/<id>', methods=['GET', 'PUT', 'DELETE'])
 def get_id(id):
     musica = playlist.encontra_musica_por_id(int(id))
     if not musica:
