@@ -30,7 +30,7 @@ Para realizar operações de criar / atualizar / recuperar / excluir dados das t
 
 O SQL é uma linguagem de programação usada por quase todos os bancos relacionais para consultar / manipular os dados.
 
-A depender do SGDB utilizado, podem existir algumas diferenças no SQL, mas em geral será bem parecido.
+A depender do DBMS utilizado (MySQL, Postgres, etc), podem existir algumas diferenças no SQL, mas em geral será bem parecido.
 
 ### Exemplo de criação de uma tabela
 
