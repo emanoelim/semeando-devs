@@ -1,4 +1,6 @@
-# semeando-devs-flask
+# Aula 8
+
+### API
 
 ### Configurando o projeto
 * Criar uma pasta chamada **flask**.
