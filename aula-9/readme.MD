@@ -99,9 +99,9 @@ Ainda não utilizaremos um SGBD. Vamos utilizar o módulo **sqlite3**, do python
 - Abrir um terminal na pasta criada.
 - Criar uma virtualenv: python -m venv .venv.
 - Ativar a venv: .venv/bin/activate
-- Instalar a lib flask: pip intall flask.
-- Isntalar a lib SQLAlchemy: pip install flask_sqlalchemy, que vai facilitar as operações no banco de dados.
-- Instalar a lib requests, para testar as  chamadas: pip install requests.
+- Instalar a lib flask: `pip intall flask`.
+- Isntalar a lib SQLAlchemy: `pip install flask_sqlalchemy`, que vai facilitar as operações no banco de dados.
+- Instalar a lib requests, para testar as  chamadas: `pip install requests`.
 
 
 ### Definindo o banco de dados
