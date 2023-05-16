@@ -600,3 +600,9 @@ def livros_id(id):
         }
         return resposta, 204
 ```
+
+## Exercício
+
+Criar uma classe Autor, com os campos "nome" e "data_nascimento". Implementar os endpoints /autores (GET / POST) e /autores/<id> (GET / PUT / DELETE).
+
+Na próxima aula será visto como relacionar um livro com o seu autor.
