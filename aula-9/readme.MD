@@ -61,13 +61,15 @@ select * from livro
 select * from livro where livro_id = 2
 select * from livro where titulo = 'As Duas Torres'
 select * from livro where titulo like '%Duas Torres%'
+select titulo from livro where livro_id = 2
 ```
 
-Onde:
+Onde o * significa que vamos selecionar todas as colunas ta tabela.
 1. Seleciona todos os livros;
 2. Seleciona um livro com id específico;
 3. Seleciona um livro com nome específico;
-4. Seleciona um livro cujo nome contém uma certa string.
+4. Seleciona um livro cujo nome contém uma certa string;
+5. Seleciona apenas a coluna "titulo" do livro de id igual a 2.
 
 ### Exemplo de exclusão de dados
 
