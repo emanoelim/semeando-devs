@@ -3,7 +3,7 @@
 
 ## Banco de dados 
 
-Um banco de dados é uma coleção organizada de informações - ou dados - estruturadas, normalmente armazenadas eletronicamente em um sistema de computador. Um banco de dados é geralmente controlado por um sistema de gerenciamento de banco de dados (DBMS) (https://www.oracle.com/br/database/what-is-database/).
+Um banco de dados é uma coleção organizada de informações - ou dados - estruturadas, normalmente armazenadas eletronicamente em um sistema de computador. Um banco de dados é geralmente controlado por um sistema de gerenciamento de banco de dados (SGBD) (https://www.oracle.com/br/database/what-is-database/).
 
 Estes dados podem ser organizados no formato de tabelas, semelhante a um csv. Este é o caso dos bancos de dados **relacionais**:
 
@@ -30,7 +30,7 @@ Para realizar operações de criar / atualizar / recuperar / excluir dados das t
 
 O SQL é uma linguagem de programação usada por quase todos os bancos relacionais para consultar / manipular os dados.
 
-A depender do DBMS utilizado (MySQL, Postgres, etc), podem existir algumas diferenças no SQL, mas em geral será bem parecido.
+A depender do SGBD utilizado (MySQL, Postgres, etc), podem existir algumas diferenças no SQL, mas em geral será bem parecido.
 
 ### Exemplo de criação de uma tabela
 
@@ -92,7 +92,7 @@ DELETE FROM livro WHERE livro_id = 3
 
 Neste app, os dados ficarão salvos no banco, então não serão perdidos cada vez que ele for executado novamente.
 
-Ainda não utilizaremos um SGDB. Vamos utilizar o módulo **sqlite3**, do python, para executar os comandos para manipular o banco.
+Ainda não utilizaremos um SGBD. Vamos utilizar o módulo **sqlite3**, do python, para executar os comandos para manipular o banco.
 
 ### Configurando o projeto
 - Criar uma pasta chamada flask.
