@@ -71,6 +71,14 @@ Onde o * significa que vamos selecionar todas as colunas ta tabela.
 4. Seleciona um livro cujo nome contém uma certa string;
 5. Seleciona apenas a coluna "titulo" do livro de id igual a 2.
 
+### Exemplo de atualização de dados
+
+```sql
+UPDATE livro SET ano = 2020 WHERE livro_id = 1
+```
+
+**IMPORTANTE**: nunca esquecer o WHERE ao fazer o UPDATE, caso contrário serão atualizados todos os dados da tabela!
+
 ### Exemplo de exclusão de dados
 
 ```sql
