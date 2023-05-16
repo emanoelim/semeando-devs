@@ -98,13 +98,13 @@ Ainda não utilizaremos um SGDB. Vamos utilizar o módulo **sqlite3**, do python
 
 O python já possui um módulo chamado sqlite3. Ele implementa um banco de dados leve, embutido na aplicação, sem a necessidade de instalar separada um servidor de banco de dados. É muito usado aplicativos mobile e também durante testes.
 
-```different
+```python
 import sqlite3
 conn = sqlite3.connect("livro.db")
 ```
 
 Criando a tabela **Livro**:
-```different
+```python
 create_table_cmd = """
 CREATE TABLE livro (
    livro_id INTEGER PRIMARY KEY,
@@ -117,7 +117,7 @@ conn.execute(create_table_cmd)
 
 Adicionando alguns livros:
 
-```different
+```python
 add_l1_cmd = "INSERT INTO livro(titulo, ano) VALUES ('A Sociedade do Anel', 2022)"
 add_l2_cmd = "INSERT INTO livro(titulo, ano) VALUES ('As Duas Torres', 2022)"
 add_l3_cmd = "INSERT INTO livro(titulo, ano) VALUES ('O Retorno do Rei', 2022)"
@@ -128,7 +128,7 @@ conn.execute(add_l3_cmd)
 
 Selecionando todos os livros:
 
-```different
+```python
 select_cmd = 'select * from livro'
 cur = conn.cursor()
 cur.execute(select_cmd)
@@ -138,7 +138,7 @@ livros[0], livros[1], livros[2]
 
 Selecionando um  livro de acordo com uma coluna:
 
-```different
+```python
 select_cmd = 'select * from livro where livro_id = 1'
 cur.execute(select_cmd)
 livro = cur.fetchall()
@@ -147,7 +147,7 @@ livro[0]
 
 Atualizando um livro:
 
-```different
+```python
 update_cmd = 'UPDATE livro SET ano = 2020 WHERE livro_id = 1'
 conn.execute(update_cmd)
 select_cmd = 'select * from livro where livro_id = 1'
@@ -346,7 +346,7 @@ def livros():
 
 Utilizando a lib requests para testar:
 
-```different
+```python
 requests.post(url='http://127.0.0.1:5000/livros', json={'titulo': 'Lugar Nenhum', 'ano': 2020}, headers={'Content-type': 'application/json'})
 ```
 
@@ -468,7 +468,7 @@ def livros_id(id):
 
 Para testar:
 
-```different
+```python
 requests.delete(url='http://127.0.0.1:5000/livros/2')
 ```
 
@@ -524,7 +524,7 @@ def livros_id(id):
 
 Para testar:
 
-```different
+```python
 requests.put(url='http://127.0.0.1:5000/livros/1', json={'titulo': 'Lugar nenhum', 'ano': 2020}, headers={'Content-type': 'applicat
 ion/json'})
 ```
