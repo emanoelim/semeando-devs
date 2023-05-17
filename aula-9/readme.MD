@@ -311,7 +311,7 @@ class Livro(db.Model):
     ano = db.Column(db.Integer)
     # FIM NOVO BLOCO
 
-    def __init__(self, titulo, ano):
+    def __init__(self, titulo, ano):  # REMOVER O LIVRO_ID DO INIT
         self.titulo = titulo
         self.ano = ano
 ```
@@ -616,3 +616,8 @@ def livros_id(id):
 Criar uma classe Autor, com os campos "nome" e "data_nascimento". Implementar os endpoints /autores (GET / POST) e /autores/<id> (GET / PUT / DELETE).
 
 Na próxima aula será visto como relacionar um livro com o seu autor.
+    
+Links para o postman ou insomnia:
+- https://www.postman.com/
+- https://insomnia.rest/
+
