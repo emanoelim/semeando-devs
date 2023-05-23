@@ -218,6 +218,14 @@ CONSTRAINT fk_livros_autores REFERENCES autor (autor_id)  --define como chave es
 ON DELETE CASCADE; --se o autor for excluído, exclui o livro também
 ```
 
+Desta forma, teremos:
+
+| livro_id | titulo              | ano_lancamento | autor_id         |
+|----------|---------------------|----------------|------------------|
+| 1        | A Sociedade do Anel | 2022           | 1                |
+| 2        | As Duas Torres      | 2022           | 1                |
+| 3        | O Retorno do Rei    | 2022           | 1                |
+
 No Python, será necessário adicionar na classe Livro:
 
 ```python
