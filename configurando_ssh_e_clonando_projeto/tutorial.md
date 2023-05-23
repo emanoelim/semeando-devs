@@ -48,12 +48,11 @@ Feito isso, você não precisará digitar a senha toda vez que for manipular um 
 
 Na pasta onde deseja guardar o repositório, abrir o Git Bash (windows) ou um terminal normal no linux. Executar o comando: `git clone git@github.com:emanoelim/semeando-devs.git`.
 
-Na primeira vez em que estiver clonando um projeto, deve aparecer a mensagem abaixo. Você deve digitar "yes" e clicar em
-Enter.
+Na primeira vez em que estiver clonando um projeto, deve aparecer a mensagem abaixo. Você deve digitar "yes" e clicar em Enter.
 
 ```different
 This key is not known by any other names
 Are you sure you want to continue connecting (yes/no/[fingerprint])?
 ```
 
-Depois disso o repositório será cloando para seu computador.
+Depois disso o repositório será clonado em seu computador.
