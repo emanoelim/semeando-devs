@@ -252,3 +252,5 @@ Agora, para cadastrar um livro vinculado com o autor, podemos alterar a request:
 ```python
 requests.post(url='http://127.0.0.1:5000/livros', json={'titulo': 'Coraline', 'ano': 2020, 'autor_id': 1}, headers={'Content-type': 'application/json'})
 ```
+
+Após finalizar o desenvolvimento do projeto, você pode parar o conteiner do banco com o comando: `docker stop pg-flask`.
