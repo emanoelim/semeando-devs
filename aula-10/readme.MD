@@ -23,6 +23,8 @@ Um conteiner é um ambiente isolado. Ele contém um conjunto de processos que s�
 
 Os containeres utilizam o mesmo kernel do sistema operacional, mas ficam isolados uns dos outros e também do restante do sistema. Por exemplo: em vez de você instalar o Postgres diretamente no sistema operacional, você pode rodar ele a partir de um conteiner. Você pode até ter vários containeres do Postgres, cada um baseado em uma imagem diferente.
 
+Com o auxílio do docker também é possível criar suas próprias imagens. Exemplo: uma imagem que contenha todas as dependências deste projeto, incluindo o banco de dados, as bibliotecas Python, como o Flask e etc. Qualquer pessoa com esta imagem deve conseguir rodar o projeto dentro de containeres, da mesma maneira que você, independente do seu sistema operacional.
+
 ### Atualizando o projeto para utilizar o Postgres
 
 Iniciar um conteiner com o Postgres: `docker run --name pg-flask -p 5433:5432 -e POSTGRES_PASSWORD=postgres postgres`.
