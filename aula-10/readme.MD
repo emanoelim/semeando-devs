@@ -220,7 +220,7 @@ ON DELETE CASCADE; --se o autor for excluído, exclui o livro também
 
 Desta forma, teremos:
 
-| livro_id | titulo              | ano_lancamento | autor_id         |
+| livro_id | titulo              | ano            | autor_id         |
 |----------|---------------------|----------------|------------------|
 | 1        | A Sociedade do Anel | 2022           | 1                |
 | 2        | As Duas Torres      | 2022           | 1                |
