@@ -1,3 +1,13 @@
+## Instalando o Git
+O Git é uma ferramenta pra versionamento de código amplamente utilizado atualmente. Além de manter os códigos em um repoistório online, evitando que você perca o código, ele mantém todo o histórico de alterações e de quem realizou essas alterações. Ele possui estratégias para permitir que vários desenvolvedores trabalhem em um mesmo projeto ou até no mesmo arquivo.
+
+O Github é uma plataforma de gerenciamento de códigos que utiliza o Git como sistema de versionamento. No Github você pode criar repositórios para hospedar os códigos, criar repositórios privados, editar os códigos através da interface, executar "actions" para garantir a qualidade do código, entre outras funcionalidades.
+
+Para instalar:
+- Linux: `sudo apt install git-all`
+- Windows: instalador no link https://git-scm.com/download/win
+- Outros sistemas: https://git-scm.com/downloads
+
 ## Configurando a chave SSH
 
 Acessar sua conta do github no menu "Settings":
