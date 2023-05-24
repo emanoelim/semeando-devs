@@ -8,6 +8,10 @@ Para instalar:
 - Windows: instalador no link https://git-scm.com/download/win
 - Outros sistemas: https://git-scm.com/downloads
 
+Para configurar usuário e e-mail, abrir o Git Bash (windows) ou um terminal normal no linux e executar os comandos:
+- git config --global user.name "FIRST_NAME LAST_NAME"
+- git config --global user.email "MY_NAME@example.com"
+
 ## Configurando a chave SSH
 
 Acessar sua conta do github no menu "Settings":
