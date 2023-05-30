@@ -329,3 +329,28 @@ Caso você tente adicionar um livro com um autor_id que seja do tipo string, por
 	}
 }
 ```
+
+### Retornando os dados do autor no livro
+
+O ajuste abaixo na classe Livro retornará as informações do autor juntamente com o livro, em vez de retornar apenas o autor_id:
+
+```python
+    def serialize(self):
+        autor = Autor.retrieve(self.autor_id)
+        dados_autor = autor.serialize() if autor else None  # if ternário
+        return {
+            'livro_id': self.livro_id,
+            'titulo': self.titulo,
+            'ano': self.ano,
+            'autor': dados_autor
+        }
+```
+
+O if ternário é equivalente a:
+
+```python
+if autor:
+    dados_autor = autor.serialize()
+else:
+    dados_autor = None
+```

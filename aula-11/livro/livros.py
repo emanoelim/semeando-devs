@@ -1,4 +1,5 @@
 from db import db
+from autor.autores import Autor
 
 
 class Livro(db.Model):
@@ -15,11 +16,13 @@ class Livro(db.Model):
         self.autor_id = autor_id
 
     def serialize(self):
+        autor = Autor.retrieve(self.autor_id)
+        dados_autor = autor.serialize() if autor else None
         return {
             'livro_id': self.livro_id,
             'titulo': self.titulo,
             'ano': self.ano,
-            'autor_id': self.autor_id
+            'autor': dados_autor
         }
     
     # Método para o GET (todos)
