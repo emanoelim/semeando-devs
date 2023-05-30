@@ -120,8 +120,8 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:postgres@localhos
 
 # Mapeamento com as classes LivroResource e LivroListResource
 api = Api(app)
-api.add_resource(LivroResource, '/livros/<id>')  # o /id primeiro!
-api.add_resource(LivroListResource, '/livros/')
+api.add_resource(LivroResource, '/livros/<id>')
+api.add_resource(LivroListResource, '/livros')
 
     
 # /autores - POST, GET
@@ -380,9 +380,9 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:postgres@localhos
 
 api = Api(app)
 api.add_resource(LivroResource, '/livros/<id>')
-api.add_resource(LivroListResource, '/livros/')
+api.add_resource(LivroListResource, '/livros')
 api.add_resource(AutorResource, '/autores/<id>')
-api.add_resource(AutorListResource, '/autores/')
+api.add_resource(AutorListResource, '/autores')
 swagger = Swagger(app)  # nova linha
 
 
@@ -397,7 +397,7 @@ if __name__ == '__main__':
 
 Ao rodar novamente o programa, a url da documentação da API ficará disponível em: http://127.0.0.1:5000/apidocs/, por enquanto sem nada.
 
-A documentação de cada endpoint pode ser criada adicionando uma docstring em cada método. Para o get autores, por exemplo:
+A documentação de cada endpoint pode ser criada adicionando uma docstring em cada método. Para o get autores, por exemplo
 
 ```python
 class AutorListResource(Resource):
@@ -411,6 +411,7 @@ class AutorListResource(Resource):
         """
         ...
 ```
+É importante que tudo esteja escrito corretamente, como "responses" e "description", pois caso esteja faltando alguma letra, não será reconhecido no "front".
 
 Para o post, é necessário informar os parâmetros que devem ser enviados, bem como seus tipos:
 
