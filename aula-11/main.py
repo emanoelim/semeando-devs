@@ -1,5 +1,6 @@
-from flask import Flask, request
+from flask import Flask
 from flask_restful import Api
+from flasgger import Swagger
 
 from db import db
 from livro.resources import LivroListResource, LivroResource
@@ -14,6 +15,7 @@ api.add_resource(LivroResource, '/livros/<id>')
 api.add_resource(LivroListResource, '/livros/')
 api.add_resource(AutorResource, '/autores/<id>')
 api.add_resource(AutorListResource, '/autores/')
+swagger = Swagger(app)
 
 
 if __name__ == '__main__':

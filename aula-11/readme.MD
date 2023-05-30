@@ -354,3 +354,184 @@ if autor:
 else:
     dados_autor = None
 ```
+
+### Documentando a API
+
+Instalar a biblioteca https://pypi.org/project/flasgger/:
+
+- pip install flasgger
+
+Ela implementa uma documentação seguindo o padrão OpenAPI e a partir da url http://localhost:5000/apidocs fornece uma interface Swagger (conjunto de ferramentas, open source, para modelagem, documentação, testes de API).
+
+Autualizar o main.py:
+
+```python
+from flask import Flask
+from flask_restful import Api
+from flasgger import Swagger  # novo import
+
+from db import db
+from livro.resources import LivroListResource, LivroResource
+from autor.resources import AutorListResource, AutorResource
+
+
+app = Flask(__name__)
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:postgres@localhost:5433/postgres'
+
+api = Api(app)
+api.add_resource(LivroResource, '/livros/<id>')
+api.add_resource(LivroListResource, '/livros/')
+api.add_resource(AutorResource, '/autores/<id>')
+api.add_resource(AutorListResource, '/autores/')
+swagger = Swagger(app)  # nova linha
+
+
+if __name__ == '__main__':
+    db.init_app(app)
+
+    with app.app_context():
+        db.create_all()
+
+    app.run()
+```
+
+Ao rodar novamente o programa, a url da documentação da API ficará disponível em: http://127.0.0.1:5000/apidocs/, por enquanto sem nada.
+
+A documentação de cada endpoint pode ser criada adicionando uma docstring em cada método. Para o get autores, por exemplo:
+
+```python
+class AutorListResource(Resource):
+    def get(self):
+        """
+        Recuperar todos os autores
+        ---
+        responses:
+          200:
+            description: lista de autores
+        """
+        ...
+```
+
+Para o post, é necessário informar os parâmetros que devem ser enviados, bem como seus tipos:
+
+```python
+    def post(self):
+        """
+        Adicionar autor
+        ---
+        parameters:
+          - name: body
+            in: body
+            required: true
+            schema:
+              type: object
+              properties:
+                nome:
+                  type: string
+                data_nascimento:
+                  type: string
+        responses:
+          201:
+            description: autor criado
+          400:
+            description: dados inválidos
+        """
+        ...
+```
+- **name: body** - poderia ser qualquer nome. Vamos utilizar para indicar o "corpo" da request, ou o json que vai ser enviado com os dados necessários.
+
+- **in: body** - indica que os parâmetros serão enviados no json e não na url, por exemplo. Neste caso seria utilizado o "in: path".
+
+Para o put:
+
+```python
+    def put(self, id):
+        """
+        Atualizar autor
+        ---
+        parameters:
+          - name: id
+            in: path
+            type: integer
+            required: true
+          - name: body
+            in: body
+            required: true
+            schema:
+              type: object
+              properties:
+                nome:
+                  type: string
+                data_nascimento:
+                  type: string
+        responses:
+          200:
+            description: autor atualizado
+          400:
+            description: dados inválidos
+          404: 
+            description: autor não encontrado
+        """
+        ...
+```
+
+Nesta caso existem dois "names", o "body" e o "id".
+
+- **in: body** - representa os dados que serão enviados via json.
+
+- **in: path** - representa dados que serão enviados na própria url. Neste caso, é o id do autor que queremos recuperar, lembrando que a url do put é /autores/id. 
+
+Para o delete:
+
+```python
+    def delete(self, id):
+        """
+        Deletar autor
+        ---
+        parameters:
+          - name: id
+            in: path
+            type: integer
+            required: true
+        responses:
+          204:
+            description: autor deletado
+          404:
+            description: autor não encontrado
+        """
+        ...
+```
+
+Para o get por id:
+
+```python
+    def delete(self, id):
+        """
+        Recuperar autor
+        ---
+        parameters:
+          - name: id
+            in: path
+            type: integer
+            required: true
+        responses:
+          200:
+            description: autor
+          404:
+            description: autor não encontrado
+        """
+        ...
+```
+
+Por fim, a docuemntação deve ficar:
+
+![docs](figuras/docs.png)
+
+Clicando em cada um dos métodos, podemos visualizar os parâmetros necessários e o retorno de cada endpoint. 
+
+Também é possível testar a aplicação através desta documentação, por exemplo:
+
+![get](figuras/teste_get.png)
+
+### Atividade
+Documentar os endpoints do Livro.

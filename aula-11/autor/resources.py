@@ -25,6 +25,13 @@ parser.add_argument(
 
 class AutorListResource(Resource):
     def get(self):
+        """
+        Recupera todos os autores
+        ---
+        responses:
+          200:
+            description: lista de autores
+        """
         autores = Autor.list()
         resposta = {
             'dados': [autor.serialize() for autor in autores]
@@ -32,6 +39,26 @@ class AutorListResource(Resource):
         return resposta, 200
     
     def post(self):
+        """
+        Adicionar autor
+        ---
+        parameters:
+          - name: body
+            in: body
+            required: true
+            schema:
+              type: object
+              properties:
+                nome:
+                  type: string
+                data_nascimento:
+                  type: string
+        responses:
+          201:
+            description: autor criado
+          400:
+            description: dados inválidos
+        """
         request_data = parser.parse_args()
         nome = request_data.get('nome')
         data_nascimento = request_data.get('data_nascimento')
@@ -45,6 +72,20 @@ class AutorListResource(Resource):
 
 class AutorResource(Resource):
     def get(self, id):
+        """
+        Recuperar autor
+        ---
+        parameters:
+          - name: id
+            in: path
+            type: integer
+            required: true
+        responses:
+          200:
+            description: autor
+          404:
+            description: autor não encontrado
+        """
         autor = Autor.retrieve(int(id))
         if not autor:
             resposta = {
@@ -58,6 +99,32 @@ class AutorResource(Resource):
         return resposta, 200
     
     def put(self, id):
+        """
+        Atualizar autor
+        ---
+        parameters:
+          - name: id
+            in: path
+            type: integer
+            required: true
+          - name: body
+            in: body
+            required: true
+            schema:
+              type: object
+              properties:
+                nome:
+                  type: string
+                data_nascimento:
+                  type: string
+        responses:
+          200:
+            description: autor atualizado
+          400:
+            description: dados inválidos
+          404: 
+            description: autor não encontrado
+        """
         autor = Autor.retrieve(int(id))
         if not autor:
             resposta = {
@@ -77,6 +144,20 @@ class AutorResource(Resource):
         return resposta, 200
 
     def delete(self, id):
+        """
+        Deletar autor
+        ---
+        parameters:
+          - name: id
+            in: path
+            type: integer
+            required: true
+        responses:
+          204:
+            description: autor deletado
+          404:
+            description: autor não encontrado
+        """
         autor = Autor.retrieve(int(id))
         if not autor:
             resposta = {
