@@ -304,7 +304,7 @@ def mascara_cpf(cpf):
 
 Dentro da pasta cliente, criar um arquivo chamado validators.py, com uma função que retorna uma excption se o cpf for inválido, ou então o cpf mascarado se for válido:
 
-```
+```python
 from utils.utils import valida_cpf, mascara_cpf
 
 
