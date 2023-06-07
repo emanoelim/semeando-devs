@@ -887,3 +887,43 @@ class LivroPedidoListResource(Resource):
         }
         return resposta, 201
 ```
+
+## Atividade
+
+Já foi criado no resources.py do pedido, um esqueleto do LivroPedidoResource (get, put, delete). Os métodos recebem além do "id" (do pedido), um parâmetro "livro_id".
+
+Isto foi mapeado na documentação, para ser possível informar o livro_id via swagger:
+
+```python
+class LivroPedidoResource(Resource):
+    def get(self, id, livro_id):
+        """
+        Recupera um livro do pedido
+        ---
+        tags:
+          - pedidos
+        parameters:
+          - name: id
+            in: path
+            type: integer
+            required: true
+          - name: livro_id  # AQUI
+            in: path
+            type: integer
+            required: true
+        responses:
+          200:
+            description: livro do pedido
+        """
+        pass
+```
+
+![swagger_pedido_livro](figuras/swagger_pedido_livro.png)
+
+E também no main.py já foram criadas as urls:
+
+```python
+api.add_resource(LivroPedidoResource, '/pedidos<id>/livros/<livro_id>/')
+```
+
+A partir disso, criar as lógicas que utilizem o id e o livro_id para fazer as operações de get, put e delete para um livro específico de um pedido.

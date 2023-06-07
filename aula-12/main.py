@@ -6,7 +6,7 @@ from db import db
 from livro.resources import LivroListResource, LivroResource
 from autor.resources import AutorListResource, AutorResource
 from cliente.resources import ClienteListResource, ClienteResource
-from pedido.resources import PedidoListResource, PedidoResource, LivroPedidoListResource
+from pedido.resources import PedidoListResource, PedidoResource, LivroPedidoListResource, LivroPedidoResource
 
 
 app = Flask(__name__)
@@ -22,6 +22,7 @@ api.add_resource(ClienteListResource, '/clientes/')
 api.add_resource(PedidoResource, '/pedidos/<id>')
 api.add_resource(PedidoListResource, '/pedidos/')
 api.add_resource(LivroPedidoListResource, '/pedidos<id>/livros/')
+api.add_resource(LivroPedidoResource, '/pedidos<id>/livros/<livro_id>/')
 swagger = Swagger(app)
 
 

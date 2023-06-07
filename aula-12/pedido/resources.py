@@ -264,3 +264,72 @@ class LivroPedidoListResource(Resource):
             'dados': [pedido.serialize()]
         }
         return resposta, 201
+    
+
+class LivroPedidoResource(Resource):
+    def get(self, id, livro_id):
+        """
+        Recupera um livro do pedido
+        ---
+        tags:
+          - pedidos
+        parameters:
+          - name: id
+            in: path
+            type: integer
+            required: true
+          - name: livro_id
+            in: path
+            type: integer
+            required: true
+        responses:
+          200:
+            description: livro do pedido
+        """
+        pass
+    
+    def put(self, id, livro_id):
+        """
+        Atualiza um livro do pedido
+        ---
+        tags:
+          - pedidos
+        parameters:
+          - name: id
+            in: path
+            type: integer
+            required: true
+          - name: livro_id
+            in: path
+            type: integer
+            required: true
+        responses:
+          200:
+            description: livro atualizado
+          400:
+            description: dados inválidos
+        """
+        pass
+    
+    def delete(self, id, livro_id):
+        """
+        Deleta um livro do pedido
+        ---
+        tags:
+          - pedidos
+        parameters:
+          - name: id
+            in: path
+            type: integer
+            required: true
+          - name: livro_id
+            in: path
+            type: integer
+            required: true
+        responses:
+          204:
+            description: livro deletado
+          404:
+            description: livro não encontrado
+        """
+        pass
