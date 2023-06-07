@@ -599,7 +599,7 @@ api.add_resource(PedidoListResource, '/pedidos/')
 
 Neste caso o relacionamento é N para N (muitos para muitos, many to many). Uma terceira tabela é necessária para representar o relacionamento. Ela contém duas chaves estrangeiras, a do livro e a do pedido.
 
-![livro_pedido](figuras/livro_pedido.png)
+![n_para_n](figuras/n_para_n.png)
 
 Vamos criar esta tabela antes da classe Pedido:
 
