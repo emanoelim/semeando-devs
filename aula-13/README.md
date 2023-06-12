@@ -6,15 +6,15 @@
 
 - https://www.djangoproject.com/.
 
-Ele foi criado para ajudar o desenvolvedor a construir aplicações da maneira mais rápido possível.
+Ele foi criado para ajudar o desenvolvedor a construir aplicações da maneira mais rápida possível.
 
 Ele conta com uma comunidade muito ativa. É muito fácil encontrar tutoriais e bibliotecas que adicionam funcionalidades extra para o framework.
 
-Neste tutorial oficial do Django, é possível encontrar um passo a passo para contruir uma aplicação: https://docs.djangoproject.com/en/4.2/intro/tutorial01/.
+Neste tutorial oficial do Django é possível encontrar um passo a passo para construir uma aplicação: https://docs.djangoproject.com/en/4.2/intro/tutorial01/.
 
 O Django vem com várias ferramentas para facilitar o desenvolvimento:
 
-- ORM (Object Relational Mapper): da mesma maneira que o Sql Alchemy (biblioteca que instalamos no projeto Flask), o ORM do Django nos permite interagir com o banco de dados de maneira alto nível, utilizando classes, sem a necessidade de escrever SQL.
+- ORM (Object Relational Mapper): da mesma maneira que o SQL Alchemy (biblioteca que instalamos no projeto Flask), o ORM do Django nos permite interagir com o banco de dados de maneira bem alto nível, utilizando classes, sem a necessidade de escrever SQL.
 
 - Admin: uma interface que permite fazer o CRUD das tabelas do banco de dados, além de fazer cadastro e gerenciamento de usuários, entre outras possibilidades.
 
@@ -26,13 +26,13 @@ O Django vem com várias ferramentas para facilitar o desenvolvimento:
 
 ## Django rest framework (DRF)
 
-É uma biblioteca que facilita muito o desenvolvimento de APIs com Django (semelhante ao que Flask Restful, que usamos no projeto Flask).
+É uma biblioteca que facilita muito o desenvolvimento de APIs com Django (semelhante ao que Flask Restful para o Flask).
 
 - https://www.django-rest-framework.org/.
 
 ## Projeto da livraria utilizando o Django
 
-Nesta aula, vamos estudar as funcionalidades do Django, replicando o mesmo projeto da livraria, que fizemos com Flask.
+Nesta aula vamos estudar as funcionalidades do Django, replicando o mesmo projeto da livraria que fizemos com Flask.
 
 ### Criando o projeto
 
@@ -62,15 +62,15 @@ A pasta mais interna "livraria" é o Python package do projeto (veja que contém
 
 - settings.py: confgurações do projeto. Aqui vamos especificar idioma do projeto, variáveis do banco de dados (usuário, senha, etc), urls que poderão acessar a aplicação, entre outras configurações.
 
-- urls.py: mapeamento das urls, como faziamos no main.py do flask. Aqui fica em um arquivo separado.
+- urls.py: mapeamento das urls, como faziamos no main.py do Flask. Aqui fica em um arquivo separado.
 
 - wsgi.py: utilizado quando formos subir a aplicação em um servidor compatível com WSGI.
 
-O manage.py é um arquivo que permite executar comandos para interagir com a aplicação, como executar o projeto, executar testes, iniciar um terminal específico para interagir com o ORM, entre outros.
+O manage.py é um arquivo que permite executar comandos para interagir com a aplicação como executar o projeto, executar testes, iniciar um terminal específico para interagir com o ORM, entre outros.
 
-Com esta estrutura criada, e estando dentro da pasta mais externa "livraria", nós podemos executar o comando para rodar a aplicação: `python manage.py runserver`.
+Com esta estrutura criada e estando dentro da pasta mais externa "livraria" nós podemos executar o comando para rodar a aplicação: `python manage.py runserver`.
 
-Se tudo der certo, ela deve ficar disponível na url http://127.0.0.1:8000/. Ao acessar a url você deve ver a mensagem: The install worked successfully! Congratulations!
+Se tudo der certo ela deve ficar disponível na url http://127.0.0.1:8000/. Ao acessar a url você deve ver a mensagem: The install worked successfully! Congratulations!
 
 ### Criando um app
 Um projeto é composto por vários apps. Normalmente um app é usado para reperesentar um domínio da aplicação. No caso da livraria podemos pensar em alguns domínios: 
@@ -103,7 +103,7 @@ O app vai ter a estrutura:
 
 ![estrutura-app](figuras/estrutura-app.png)
 
-- migrations: quando criarmos ou alterarmos uma classe que representa uma tabela, vamos precisar rodar um comando que irá gerar um arquivo de migration, que representará as operações que iremos fazer no banco de dados. Veremos mais detalhamente ao utilizar.
+- migrations: quando criarmos ou alterarmos uma classe que representa uma tabela vamos precisar rodar um comando que irá gerar um arquivo de migration, que representará as operações que iremos fazer no banco de dados. Veremos mais detalhamente ao utilizar.
 
 - admin.py: aqui poderemos registrar as tabelas criadas para que apareçam no painel do admin. Por enquanto estará vazio.
 
@@ -111,7 +111,7 @@ O app vai ter a estrutura:
 
 - models.py: aqui vamos criar as classes que representam as tabelas, como faziamos, por exemplo, no arquivo livros.py. Por enquanto estará vazio.
 
-- tests.py: aqui podemos criar testes automatizados. Por enquanto está vazio.
+- tests.py: aqui podemos criar testes automatizados. Por enquanto está vazio. Será visto mais adiante.
 
 - views.py: aqui serão criados os métodos de get, post, put e delete, semelhante ao que faziamos no resources.py. Por enquanto está vazio.
 
@@ -155,7 +155,7 @@ class LivroAdmin(admin.ModelAdmin):
     list_display = ('id', 'titulo', 'ano')
 ```
 
-Depois de adicionar o app no settings.py e registrar a tabela no admin.py, é necessário rodar o comando: `python manage.py makemigrations`.
+Depois de adicionar o app no settings.py e registrar a tabela no admin.py é necessário rodar o comando: `python manage.py makemigrations`.
 
 Isso vai gerar automaticamente um novo arquivo no package migrations do app livros, chamado 0001_initial.py, com o conteúdo:
 
@@ -184,11 +184,22 @@ class Migration(migrations.Migration):
     ]
 ```
 
-É possível ver que mesmo não especificando o id no model.py, ele é gerado automaticamente como uma primary key.
+É possível ver que mesmo não especificando o id no model.py ele é gerado automaticamente como uma primary key.
 
 Neste ponto, as alterações em banco representadas neste arquivo ainda não foram aplicadas. Para que isso aconteça é necessário rodar o comando: `python manage.py migrate`.
 
-Ao rodar este comando, a tabela será criada no banco de dados. Como não configuramos nenhum banco até este momento, será usado o Sqlite por padrão.
+Ao rodar este comando a tabela será criada no banco de dados. Como não configuramos nenhum banco até este momento, será usado o Sqlite por padrão, que é o que já vem configurado no settings.py:
+
+```python
+...
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+    }
+}
+...
+```
 
 Vamos executar o comando: `python manage.py createsuperuser`. 
 
@@ -298,8 +309,8 @@ Para isso iremos registrar no router as views dos autores e editoras:
 ...
 router = routers.DefaultRouter()
 router.register('livros', LivroView)  # nome do objeto da view
-router.register('autores', AutorView)  # nome do objeto da view
-router.register('editoras', EditoraView)  # nome do objeto da view
+# router.register('autores', AutorView)  # nome do objeto da view
+# router.register('editoras', EditoraView)  # nome do objeto da view
 
 
 urlpatterns = [
@@ -308,7 +319,7 @@ urlpatterns = [
 ...
 ```
 
-No urls.py que já existe no package "livaria", será necessário incluir as urls do app livros:
+No urls.py que já existe no package "livraria" será necessário incluir as urls do app livros:
 
 ```python
 from django.contrib import admin
@@ -329,7 +340,8 @@ Acessando http://127.0.0.1:8000/livros/1 ou qualquer id existente, vamos ter ace
 
 ![drf-id](figuras/drf-id.png)
 
-Isto é possível pois a classe que LivroView herda é a ModelViewSet e ela implementa os métodos:
+Isto é possível pois a classe LivroView herda da classe ModelViewSet do DRF e ela implementa os métodos:
+
 - create() - POST
 - list - GET todos
 - retrieve - GET por id
@@ -349,6 +361,196 @@ class RetrieveModelMixin:
         return Response(serializer.data)
 ```
 
-Ele recupera o objeto relacionado ao id enviado na url, a partir do método get_object() e salva na variável instance. Depois ele recupera a classe de serializer que especificamos na view e utiliza para serializar os dados de instance. Por fim, retorna os dados como um objeto da classe Response(), que retorna um json juntamente com um status code (e erros se houverem). 
+Ele recupera o objeto relacionado ao id enviado na url a partir do método get_object() e salva na variável instance. Depois ele recupera a classe de serializer que especificamos na view e utiliza para serializar os dados de instance. Por fim, retorna os dados como um objeto da classe Response(), que retorna um json juntamente com um status code (e erros se houverem). 
 
 Caso precisemos de algum comportamento específico, os métodos padrão podem ser sobreescritos na view.
+
+Ainda no arquivo models.py do app livro vamos criar o model Autor e também vincular o autor ao livro:
+
+```python
+from django.db import models
+
+
+class Autor(models.Model):
+    # o id é gerado automaticamente
+    nome = models.CharField(max_length=255)
+    data_nascimento = models.DateField()
+
+
+class Livro(models.Model):
+    # o id é gerado automaticamente
+    titulo = models.CharField(max_length=255)
+    ano = models.IntegerField()
+    autor = models.ForeignKey(
+        Autor, 
+        related_name='livros_autor', # o related_name é usado para recuperar os livros a partir do autor
+        on_delete=models.CASCADE,  # se o autor for excluído o cascade vai fazer o livro ser excluído também
+        null=True  # para evitar problema nos livros que foram criados antes da tabela Autor
+    )
+```
+
+Cadastro do autor no admin.py:
+
+```python
+from django.contrib import admin
+
+from livros.models import Livro, Autor
+
+
+@admin.register(Autor)
+class AutorAdmin(admin.ModelAdmin):
+    # campos que vão aparecer na listagem
+    list_display = ('id', 'nome', 'data_nascimento')
+
+
+@admin.register(Livro)
+class LivroAdmin(admin.ModelAdmin):
+    # campos que vão aparecer na listagem
+    list_display = ('id', 'titulo', 'ano')
+
+```
+
+Vamos rodar o comando para gerar as migrations: `python manage.py makemigrations`. Isso vai gerar o arquivo 0002_autor_livro_autor.py. Podemos renomear este arquivo se preferirmos, mas antes de rodar o migrate. Após rodar o migrate o nome dessa migration fica registrado em uma tabela do Django para contrele de migrations. 
+
+Vamos rodar o comando para aplicar as migrations no banco: `python manage.py migrate`.
+
+Para fazer um pequeno teste, vamos alterar o nome da migration após rodar o migrate: 0002_autor.py. Ao tentar rodar o migrate de novo vai acontecer um erro:
+
+```different
+...
+django.db.utils.OperationalError: table "livros_autor" already exists
+```
+
+Isso acontece pois o Django usa o nome das migrations para saber o que já rodou ou não. Então ele entende 0002_autor.py como se fosse uma migration nova e tenta rodar novamente. O problema é que a tabela Autor já foi criada no banco ao rodar a migration pela primeira vez com o nome original, e aí o erro acontece. Por isso o nome deve ser alterado antes do migrate se for desejado. Para corrigir o erro vamos voltar para o nome original: 0002_autor_livro_autor.py. Agora ao rodar o migrate novamente a mensgem deve ser:
+
+```different
+No migrations to apply.
+```
+
+Vamos criar o serializer e a view do autor:
+
+```python
+
+from rest_framework import serializers
+from rest_framework import viewsets
+
+from livros.models import Livro, Autor
+
+
+class AutorSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Autor
+        # campos que queremos serializar
+        fields = ('id', 'nome', 'data_nascimento')
+
+
+class LivroSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Livro
+        # campos que queremos serializar
+        fields = ('id', 'titulo', 'ano', 'autor')  # vamos adicionar aqui o autor também
+
+
+class AutorView(viewsets.ModelViewSet):
+    queryset = Autor.objects.all() # filtra todos os autores
+    serializer_class = AutorSerializer # classe de serializer que será usada  
+    http_method_names = ['get', 'post', 'put', 'delete']  # métodos http permitidos
+
+
+class LivroView(viewsets.ModelViewSet):
+    queryset = Livro.objects.all() # filtra todos os livros
+    serializer_class = LivroSerializer # classe de serializer que será usada  
+    http_method_names = ['get', 'post', 'put', 'delete']  # métodos http permitidos
+```
+
+Vamos adicionar as urls no urls.py do app livros:
+
+```python
+from django.urls import path, include
+from rest_framework import routers
+
+from livros.views import LivroView, AutorView
+
+
+router = routers.DefaultRouter()
+router.register('livros', LivroView)  # nome do objeto da view
+router.register('autores', AutorView)
+
+urlpatterns = [
+    path('livros/', include(router.urls)),  # nome do app
+]
+```
+
+Agora ao abrir a url http://127.0.0.1:8000/livros/autores/ poderemos cadastrar um novo autor.
+
+Ao abrir a url http://127.0.0.1:8000/livros/livros/ e tentar cadastrar um livro novo, terá aparecido um campo de select para escolher o autor:
+
+![livro-autor](figuras/livro-autor.png)
+
+A opção vai aparecer com um nome estranho: "Autor object (1)". Isto pode ser melhorado adicionado um método na classe Autor:
+
+```python
+    def __str__(self) -> str:
+        return self.nome
+```
+
+Agora, ao atualizar a página dos livros a opção deve aparecer mais amigável no select.
+
+Ao fazer o get dos livros, o autor vem apenas com o id:
+
+```json
+...
+    {
+        "id": 2,
+        "titulo": "Lugar nenhum",
+        "ano": 2000,
+        "autor": 1
+    }
+...
+```
+
+Para trazer os dados do autor dentro do livro, vamos quebrar o LivroSerializer em 2:
+- Primeiro vamos renomer o LivroSerializer para LivroWriteSerializer:
+
+```python
+# será usado para as operações de post, put
+class LivroWriteSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Livro
+        # campos que queremos serializar
+        fields = ('id', 'titulo', 'ano', 'autor')  # vamos adicionar aqui o autor também
+```
+
+- Depois vamos criar um LivroReadSerializer:
+
+```python
+# será usado para o get
+class LivroReadSerializer(serializers.ModelSerializer):
+    autor = AutorSerializer()
+
+    class Meta:
+        model = Livro
+        # campos que queremos serializar
+        fields = ('id', 'titulo', 'ano', 'autor')  # vamos adicionar aqui o autor também
+```
+
+Vamos atualizar a view do livro:
+
+```python
+class LivroView(viewsets.ModelViewSet):
+    queryset = Livro.objects.all() # filtra todos os livros
+    serializer_class = LivroReadSerializer # classe de serializer que será usada  
+    http_method_names = ['get', 'post', 'put', 'delete']  # métodos http permitidos
+
+    def get_serializer_class(self):
+        # SAFE_METHODS = ('GET', 'HEAD', 'OPTIONS')
+        if self.request.method in SAFE_METHODS:
+            return super().get_serializer_class()
+        return LivroWriteSerializer
+```
+
+O LivroReadSerializer pode ser simplificado:
+
+```python
+
+```
