@@ -60,7 +60,7 @@ A pasta mais interna "livraria" é o Python package do projeto (veja que contém
 
 - asgi.py: utilizado quando formos subir a aplicação em um servidor compatível com ASGI.
 
-- settings.py: confgurações do projeto. Aqui vamos especificar idioma do projeto, variáveis do banco de dados (usuário, senha, etc), urls que poderão acessar a aplicação, entre outras configurações.
+- settings.py: confgurações do projeto. Aqui vamos especificar idioma do projeto, variáveis do banco de dados (usuário, senha, etc), urls que poderão acessar a aplicação, entre outras configurações. 
 
 - urls.py: mapeamento das urls, como faziamos no main.py do Flask. Aqui fica em um arquivo separado.
 
@@ -549,8 +549,16 @@ class LivroView(viewsets.ModelViewSet):
         return LivroWriteSerializer
 ```
 
-O LivroReadSerializer pode ser simplificado:
+### Alterando o idioma para português
+
+Alterar no settings.py:
 
 ```python
+LANGUAGE_CODE = 'pt-br'
 
+TIME_ZONE = 'America/Sao_Paulo'
 ```
+
+Agora o admin já deve ficar em português:
+
+![admin-pt](figuras/admin-pt.png)
