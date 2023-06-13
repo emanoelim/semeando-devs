@@ -18,7 +18,7 @@ O Django vem com várias ferramentas para facilitar o desenvolvimento:
 
 - Admin: uma interface que permite fazer o CRUD das tabelas do banco de dados, além de fazer cadastro e gerenciamento de usuários, entre outras possibilidades.
 
-- Autenticação de autorização: o Django já implementa o cadastro de usuários e grupos de acesso. Cada vez que você cria uma nova tabela pelo Django, automaticamente são criadas permissões para criar, visualizar, atualizar e excluir aquele tipo de objeto. Desta forma, estas permissões podem ser vinculadas a usuários e grupos específicos que poderão acessar o objeto.
+- Autenticação e autorização: o Django já implementa o cadastro de usuários e grupos de acesso. Cada vez que você cria uma nova tabela pelo Django, automaticamente são criadas permissões para criar, visualizar, atualizar e excluir aquele tipo de objeto. Desta forma, estas permissões podem ser vinculadas a usuários e grupos específicos que poderão acessar o objeto.
 
 - Templates: o Django também permite criar páginas HTML que interagem facilmente com os objetos do backend, permitindo criar um "fronted" rapidamente para a aplicação.
 
@@ -26,7 +26,7 @@ O Django vem com várias ferramentas para facilitar o desenvolvimento:
 
 ## Django rest framework (DRF)
 
-É uma biblioteca que facilita muito o desenvolvimento de APIs com Django (semelhante ao que Flask Restful para o Flask).
+É uma biblioteca que facilita muito o desenvolvimento de APIs com Django (semelhante ao Flask-Restful para o Flask).
 
 - https://www.django-rest-framework.org/.
 
@@ -83,7 +83,7 @@ Um projeto é composto por vários apps. Normalmente um app é usado para repere
 
 Para começar, vamos criar o app "livros": `python manage.py startapp livros`.
 
-Também será necessário adicionar o novo app no settings.py:
+Também será necessário adicionar o novo app no settings.py. Já existem alguns apps cadastrados, que são apps padrão do Django:
 
 ```python
 ...
@@ -188,7 +188,7 @@ class Migration(migrations.Migration):
 
 Neste ponto, as alterações em banco representadas neste arquivo ainda não foram aplicadas. Para que isso aconteça é necessário rodar o comando: `python manage.py migrate`.
 
-Ao rodar este comando a tabela será criada no banco de dados. Como não configuramos nenhum banco até este momento, será usado o Sqlite por padrão, que é o que já vem configurado no settings.py:
+Ao rodar este comando a tabela será criada no banco de dados. Como não configuramos nenhum banco até este momento, será usado o SQLite por padrão, que é o que já vem configurado no settings.py:
 
 ```python
 ...
@@ -221,7 +221,7 @@ Os campos especificados no admin.py vão aparecer na listagem:
 
 ### Criando as views do app livro
 
-Primeiramente vamos instalar a biblioteca Django rest framwork, que vai facilitar bastante a criação das views. Devemos estar com a venv ativa e rodar o comando: `pip install djangorestframework`.
+Primeiramente vamos instalar a biblioteca Django rest framwork, que vai facilitar bastante a criação das views. Devemos rodar o comando: `pip install djangorestframework`.
 
 Também será necessário adicionar o app do Django rest framework no settings.py:
 
@@ -364,6 +364,8 @@ class RetrieveModelMixin:
 Ele recupera o objeto relacionado ao id enviado na url a partir do método get_object() e salva na variável instance. Depois ele recupera a classe de serializer que especificamos na view e utiliza para serializar os dados de instance. Por fim, retorna os dados como um objeto da classe Response(), que retorna um json juntamente com um status code (e erros se houverem). 
 
 Caso precisemos de algum comportamento específico, os métodos padrão podem ser sobreescritos na view.
+
+O serializer já vai fazer algumas validações padrão, como se o tipo do dado enviado condiz com o que está especificado no model ou se estão faltando dados obrigatórios, por exemplo.
 
 Ainda no arquivo models.py do app livro vamos criar o model Autor e também vincular o autor ao livro:
 
