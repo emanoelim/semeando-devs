@@ -2,7 +2,7 @@
 
 ## Django
 
-É um framwork open source, de alto nível, focado no desenvolvimento web com Python.
+É um framework open source, de alto nível, focado no desenvolvimento web com Python.
 
 - https://www.djangoproject.com/.
 
