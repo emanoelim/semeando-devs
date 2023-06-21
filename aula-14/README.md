@@ -426,7 +426,26 @@ Ao tentar cadastrar um email inválido (ex.: "email": "user@example") o erro ser
 }
 ```
 
+## App Pedidos
 
+Da mesma forma que foi criado o app dos clientes, vamos criar o app dos livros. A diferença é que neste caso vamos ter um relacionamento N:N, pois um pedido pode ter vários livros e um livro pode estar em vários pedidos.
 
+Neste caso usamos o "ManyToManyField" do Django. Ele já cria a terceira tabela automaticamente:
 
+```python
+class Pedido(models.Model):
+    cliente = models.ForeignKey(Cliente, on_delete=models.CASCADE, related_name='clientes_pedido')
+    data = models.DateTimeField(auto_now_add=True)
+    livros = models.ManyToManyField(Livro)
 
+    def __str__(self):
+        return f'{str(self.id)} - {self.cliente}'
+```
+
+Após adicionar o app nos INSTALLED_APPS, o model Pedido no admin.py e após rodar as migrations, duas novas tabelas aparecem no banco: pedidos_pedido e pedidos_pedido_livros (esta é a terceira tabela gerada). Ela contém as colunas: id, pedido_id e livro_id. Semelhante ao que foi feito manualmente no Flask.
+
+Vamos criar também o serializer e a view, bem como o arquivo urls.py, lembrando de adicionar as urls no arquivo de urls principal. 
+
+## Atividade
+
+Separar o serializer em serializer de leitura e de escrita, para que no get da view, já retorne os dados do cliente e dos livros do pedido.
