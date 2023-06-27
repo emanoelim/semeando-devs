@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from pedidos.models import Pedido, PedidoLivros
+from pedidos.models import Pedido, PedidoLivros, Cupom
 
 
 class PedidoLivrosInline(admin.TabularInline):
@@ -13,3 +13,7 @@ class PedidoAdmin(admin.ModelAdmin):
     list_display = ('id', 'cliente', 'data')
     inlines = [PedidoLivrosInline]
 
+
+@admin.register(Cupom)
+class CupomAdmin(admin.ModelAdmin):
+    list_display = ('id', 'nome', 'percentual_desconto', 'desconto_maximo')

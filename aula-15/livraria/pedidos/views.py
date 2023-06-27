@@ -2,7 +2,7 @@ from rest_framework import serializers
 from rest_framework import viewsets
 from rest_framework.permissions import SAFE_METHODS
 
-from pedidos.models import Pedido, PedidoLivros
+from pedidos.models import Pedido, PedidoLivros, Cupom
 from clientes.views import ClienteSerializer
 from livros.views import LivroReadSerializer
 
@@ -23,16 +23,25 @@ class PedidoLivrosReadSerializer(serializers.ModelSerializer):
 
 class PedidoWriteSerializer(serializers.ModelSerializer):
     livros = PedidoLivrosWriteSerializer(source='pedidolivros_set', many=True)
+    cupom = serializers.CharField()
 
     class Meta:
         model = Pedido
-        fields = ('id', 'cliente', 'livros')
+        fields = ('id', 'cliente', 'livros', 'cupom')
+
+    def validate_cupom(self, value):
+        nome_cupom = value.upper()
+        cupom = Cupom.objects.filter(nome=nome_cupom).first()
+        if not cupom:
+            raise serializers.ValidationError('Cupom inválido.')
+        return cupom
     
     def create(self, validated_data):
         livros = validated_data.pop('pedidolivros_set')
         instance = Pedido.objects.create(**validated_data)
         for livro in livros:
             PedidoLivros.objects.create(pedido=instance, livro=livro.get('livro'), quantidade=livro.get('quantidade'))
+        instance = instance.calcular_total()
         return instance
 
     def update(self, instance, validated_data):
@@ -40,8 +49,10 @@ class PedidoWriteSerializer(serializers.ModelSerializer):
         instance.livros.clear()
         for livro in livros:
             PedidoLivros.objects.create(pedido=instance, livro=livro.get('livro'), quantidade=livro.get('quantidade'))
+        instance = super().update(instance, validated_data)
+        instance = instance.calcular_total()
         return instance
-
+        
 
 class PedidoReadSerializer(serializers.ModelSerializer):
     cliente = ClienteSerializer()
@@ -49,7 +60,7 @@ class PedidoReadSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Pedido
-        fields = ('id', 'cliente', 'livros', 'total')
+        fields = ('id', 'cliente', 'livros', 'cupom', 'total')
 
 
 class PedidoView(viewsets.ModelViewSet):
