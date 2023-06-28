@@ -407,9 +407,6 @@ Para aplicar o cupom, podemos atualizar a property:
 Agora, após recuperar um pedido pelo GET id, que foi criado com cupom, devemos ter um retorno semelhante (cupom era de 10%):
 
 ```json
-	
-Response body
-Download
 {
   "id": 6,
   "cliente": {
