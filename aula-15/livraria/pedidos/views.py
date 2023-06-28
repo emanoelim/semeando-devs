@@ -2,65 +2,78 @@ from rest_framework import serializers
 from rest_framework import viewsets
 from rest_framework.permissions import SAFE_METHODS
 
-from pedidos.models import Pedido, PedidoLivros, Cupom
+from pedidos.models import Pedido, PedidoLivro, Cupom
 from clientes.views import ClienteSerializer
 from livros.views import LivroReadSerializer
 
 
-class PedidoLivrosWriteSerializer(serializers.ModelSerializer):
+class PedidoLivroWriteSerializer(serializers.ModelSerializer):
     class Meta:
-        model = PedidoLivros
+        model = PedidoLivro
         fields = ('livro', 'quantidade')
 
 
-class PedidoLivrosReadSerializer(serializers.ModelSerializer):
+class PedidoLivroReadSerializer(serializers.ModelSerializer):
     livro = LivroReadSerializer()
 
     class Meta:
-        model = PedidoLivros
+        model = PedidoLivro
         fields = ('livro', 'quantidade')
 
 
 class PedidoWriteSerializer(serializers.ModelSerializer):
-    livros = PedidoLivrosWriteSerializer(source='pedidolivros_set', many=True)
-    cupom = serializers.CharField()
+    livros = PedidoLivroWriteSerializer(many=True, source='pedidolivro_set')
+    cupom = serializers.CharField(max_length=15, required=False)
 
     class Meta:
         model = Pedido
-        fields = ('id', 'cliente', 'livros', 'cupom')
+        fields = ('id', 'cliente', 'livros', 'total', 'cupom')
 
     def validate_cupom(self, value):
-        nome_cupom = value.upper()
-        cupom = Cupom.objects.filter(nome=nome_cupom).first()
+        value = value.upper()
+        cupom = Cupom.objects.filter(nome=value).first()
         if not cupom:
             raise serializers.ValidationError('Cupom inválido.')
         return cupom
-    
+
     def create(self, validated_data):
-        livros = validated_data.pop('pedidolivros_set')
+        """
+        {
+            "cliente": 1,
+            "livros": [
+                {
+                "livro": 1,
+                "quantidade": 2
+                }
+            ]
+        }
+        """
+        livros = validated_data.pop('pedidolivro_set')
         instance = Pedido.objects.create(**validated_data)
         for livro in livros:
-            PedidoLivros.objects.create(pedido=instance, livro=livro.get('livro'), quantidade=livro.get('quantidade'))
-        instance = instance.calcular_total()
+            PedidoLivro.objects.create(pedido=instance, livro=livro['livro'], quantidade=livro['quantidade'])
+        instance.total = instance.calcular_total()
+        instance.save()
         return instance
-
+    
     def update(self, instance, validated_data):
-        livros = validated_data.pop('pedidolivros_set')
+        livros = validated_data.pop('pedidolivro_set')
         instance.livros.clear()
         for livro in livros:
-            PedidoLivros.objects.create(pedido=instance, livro=livro.get('livro'), quantidade=livro.get('quantidade'))
+            PedidoLivro.objects.create(pedido=instance, livro=livro['livro'], quantidade=livro['quantidade'])
         instance = super().update(instance, validated_data)
-        instance = instance.calcular_total()
+        instance.total = instance.calcular_total()
+        instance.save()
         return instance
-        
+
 
 class PedidoReadSerializer(serializers.ModelSerializer):
     cliente = ClienteSerializer()
-    livros = PedidoLivrosReadSerializer(source='pedidolivros_set', many=True)
+    livros = PedidoLivroReadSerializer(many=True, source='pedidolivro_set')
 
     class Meta:
         model = Pedido
-        fields = ('id', 'cliente', 'livros', 'cupom', 'total')
+        fields = ('id', 'cliente', 'livros', 'total', 'cupom')
 
 
 class PedidoView(viewsets.ModelViewSet):

@@ -2,7 +2,7 @@
 
 ## Many to many com campos específicos
 
-Ao usar o ManyToManyField do Django ele já cria automaticamente a tarceira tabela que relaciona Pedido e Livro. Mas podemos querer adicioanr alguma outra informação, como a quantidade de cada livro.
+Ao usar o ManyToManyField do Django ele já cria automaticamente a tarceira tabela que relaciona Pedido e Livro. Mas podemos querer adicionar alguma outra informação, como a quantidade de cada livro.
 
 Nesse caso vamos especificar essa tabela manualmente e informar no campo many to many para usar esta tabela, através do parâmetro "through":
 
@@ -108,7 +108,7 @@ class Migration(migrations.Migration):
     ]
 ```
 
-Ao abrir o admin e tentar cadastrar um pedido, o único campo que vai aparecer é o cliente. Para que os livros voltem a aparecer, vamos fazer o seguinte ajuste:
+Ao abrir o admin e tentar cadastrar um pedido, o único campo que vai aparecer é o cliente. Para que os livros voltem a aparecer vamos fazer o seguinte ajuste:
 
 ```python
 from django.contrib import admin
@@ -127,7 +127,7 @@ class PedidoAdmin(admin.ModelAdmin):
     inlines = [PedidoLivrosInline]
 ```
 
-Também serão necessários ajustes no serializer:
+Também serão necessários ajustes nos serializers, como a criação dos serializers para o PedidoLivro:
 
 ```python
 # criação dos serializers do PedidoLivros
@@ -200,10 +200,11 @@ class PedidoWriteSerializer(serializers.ModelSerializer):
 
     def update(self, instance, validated_data):
         livros = validated_data.pop('pedidolivros_set')
-        instance.livros.clear() # quando for update o Pedido já existirá, mas precisamos remover qualquer livro que estava vinculado antes para deixar apenas os informados
+        instance.livros.clear() # quando for update o Pedido já existirá (instance), mas precisamos remover qualquer livro que estava vinculado antes e deixar apenas os informados agora
         for livro in livros:
             PedidoLivros.objects.create(pedido=instance, livro=livro.get('livro'), quantidade=livro.get('quantidade'))
-        return instance
+        # aqui vamos chamar o super().update(instance, validated_data) para que o django atualize o objeto Pedido, assim não precisamos fazer manualmente
+        return super().update(instance, validated_data)
 ```
 
 Obs.: perceba que na linha 181 estamos extraindo os livros a partir de pedidolivros_set em vez de livros. Isso porque antes de chegar no create, os dados passam por um método is_valid(), que verifica se os dados que chegam são válidos e organiza eles em validated_data. Então livros vira pedidolivros_set. 
@@ -272,3 +273,247 @@ class PedidoReadSerializer(serializers.ModelSerializer):
 ```
 
 Para testar, adicionar valores aos livros usados no pedido e chamar o GET Pedidos.
+
+## Cupons
+
+Vamos criar a tabela Cupom:
+
+```python
+class Cupom(models.Model):
+    nome = models.CharField(max_length=15)
+    percentual_desconto = models.IntegerField()
+    desconto_maximo = models.DecimalField(max_digits=10, decimal_places=2)
+
+    def __str__(self):
+        return self.nome
+```
+
+E no admin.py:
+
+```python
+@admin.register(Cupom)
+class CupomAdmin(admin.ModelAdmin):
+    list_display = ('id', 'nome', 'percentual_desconto', 'desconto_maximo')
+```
+
+Também vamos adicionar um campo opcional no pedido, que uma FK para o Cupom, caso a pessoa tenha um cupom para usar na compra:
+
+```python
+class Pedido(models.Model):
+    cliente = models.ForeignKey(Cliente, on_delete=models.CASCADE, related_name='clientes_pedido')
+    data = models.DateTimeField(auto_now_add=True)
+    livros = models.ManyToManyField(Livro, through='PedidoLivros')
+    cupom = models.ForeignKey(Cupom, null=True, blank=True, on_delete=models.SET_NULL)  # SET_NULL: caso o cupom seja apagado, o Pedido permanece, mas sem cupom
+```
+
+Rodar o makemigrations e o migrate.
+
+O Cupom não vai ter view nem serializer a princípio. A ideia é que sejam cadastrados apenas pelos usuários admin do sistema. 
+
+Agora vamos ajustar o write serializer do Pedido para possibilitar que a pessoa informe um cupom. Como o campo cupom é uma Foreign Key, por padrão o serializer vai esperar um id. Vamos alterar este comportamento para que ele aceite o nome do cupom, que é algo mais fácil de lembrar. 
+
+Para isso será necessário 3 coisas:
+- Adicionar o campo cupom nos fields;
+- Alterar seu comportamento para que aceite um nome (CharField);
+- Criar uma validação que tenta recuperar o cupom pelo nome recebido, caso contrário retorna erro. Vamos fazer isso através do método validate_cupom (sempre validate_ + nome do campo).
+
+```python
+class PedidoWriteSerializer(serializers.ModelSerializer):
+    livros = PedidoLivrosWriteSerializer(source='pedidolivros_set', many=True)
+    # aceitar nome do cupom em vez do padrão (id = integer)
+    cupom = serializers.CharField()
+
+    class Meta:
+        model = Pedido
+        fields = ('id', 'cliente', 'livros', 'cupom')
+
+    def validate_cupom(self, value):
+        # padronizar o nome do cupom
+        nome_cupom = value.upper()
+        # recuperar cupom com o nome informado. O first() sempre vai pegar o 1º
+        cupom = Cupom.objects.filter(nome=nome_cupom).first()
+        if not cupom:
+            raise serializers.ValidationError('Cupom inválido.')
+        return cupom
+    
+    ...
+```
+
+Ao cadastrar um Pedido via API, deve ser salvo corretamente com o cupom. O exemplo de json abaixo deve retornar 201, pois o cupom de nome "APP10" foi cadastrado via admin.
+
+```json
+{
+  "cliente": 1,
+  "livros": [
+    {
+      "livro": 1,
+      "quantidade": 5
+    }
+  ],
+  "cupom": "app10"
+}
+```
+
+O json abaixo deve retornar erro pois app20 não corresponde a nenhum cupom cadastrado:
+
+```json
+{
+  "cliente": 1,
+  "livros": [
+    {
+      "livro": 1,
+      "quantidade": 5
+    }
+  ],
+  "cupom": "app20"
+}
+```
+
+Erro:
+
+```json
+{
+  "cupom": [
+    "Cupom inválido."
+  ]
+}
+```
+
+Obs.: lembrar de colocar o cupom também nos fields do read serializer, só pra fins de visualização. Se preferir, crie um serializer para o Cupom, para exibir seus dados no read serializer do Pedido em vez de apenas o id.
+
+## Aplicando o cupom
+
+Para aplicar o cupom, podemos atualizar a property:
+
+```python
+    @property
+    def total(self):
+        total = 0
+        for livro in self.livros.all():
+            livro_pedido = PedidoLivros.objects.get(pedido=self, livro=livro)
+            valor = livro.valor
+            quantidade = livro_pedido.quantidade
+            total += valor * quantidade
+
+        if self.cupom:
+            desconto = total * self.cupom.percentual_desconto / 100
+            if desconto > self.cupom.desconto_maximo:
+                desconto = self.cupom.desconto_maximo
+            total -= desconto
+
+        return total
+```
+
+Agora, após recuperar um pedido pelo GET id, que foi criado com cupom, devemos ter um retorno semelhante (cupom era de 10%):
+
+```json
+	
+Response body
+Download
+{
+  "id": 6,
+  "cliente": {
+    "id": 1,
+    "nome": "Fulano",
+    "cpf": "123.456.789-10",
+    "data_nascimento": "1992-03-11",
+    "email": null
+  },
+  "livros": [
+    {
+      "livro": {
+        "id": 2,
+        "titulo": "Lugar Nenhum",
+        "ano": 2000,
+        "autor": {
+          "id": 1,
+          "nome": "Neil Gaiman",
+          "data_nascimento": "2023-06-24"
+        },
+        "valor": "20.00"
+      },
+      "quantidade": 10
+    }
+  ],
+  "cupom": 1,
+  "total": 180
+}
+```
+
+O problema de utilizar a property é que cada vez que acessarmos pedido.total, todos esses cálculos vão ser refeitos. Para evitar isso, podemos criar um campo chamado total no Pedido, que é atualizado quando o Pedido for criado/atualizado e não em todas as vezes que precisarmos recuperar o Pedido. Por enquanto vamos comentar a property:
+
+```python
+class Pedido(models.Model):
+    cliente = models.ForeignKey(Cliente, on_delete=models.CASCADE, related_name='clientes_pedido')
+    data = models.DateTimeField(auto_now_add=True)
+    livros = models.ManyToManyField(Livro, through='PedidoLivros')
+    cupom = models.ForeignKey(Cupom, null=True, blank=True, on_delete=models.SET_NULL)
+    total = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+    
+    # @property
+    # def total(self):
+    #     total = 0
+    #     for livro in self.livros.all():
+    #         livro_pedido = PedidoLivros.objects.get(pedido=self, livro=livro)
+    #         valor = livro.valor
+    #         quantidade = livro_pedido.quantidade
+    #         total += valor * quantidade
+
+    #     if self.cupom:
+    #         desconto = total * self.cupom.percentual_desconto / 100
+    #         if desconto > self.cupom.desconto_maximo:
+    #             desconto = self.cupom.desconto_maximo
+    #         total -= desconto
+
+    #     return total
+```
+
+Rodar o makemigrations e o migrate.
+
+Ao buscar o mesmo pedido buscando anteriormente, agora o total virá com 0.
+
+A property será atualizada para virar o método calcular_total():
+
+```python
+    def calcular_total(self):
+        total = 0
+        for livro in self.livros.all():
+            # usar o get quando temos certeza que o item existe, se não ele retorna erro
+            pedido_livro = PedidoLivro.objects.get(pedido=self, livro=livro)
+            valor = livro.valor
+            quantidade = pedido_livro.quantidade
+            total += valor * quantidade
+
+        if self.cupom:
+            desconto = total * self.cupom.percentual_desconto / 100
+            if desconto > self.cupom.desconto_maximo:
+                desconto = self.cupom.desconto_maximo
+            total -= desconto
+
+        return total
+```
+
+Este método pode ser chamado no save e no update:
+
+```python
+    def create(self, validated_data):
+        livros = validated_data.pop('pedidolivros_set')
+        instance = Pedido.objects.create(**validated_data)
+        for livro in livros:
+            PedidoLivros.objects.create(pedido=instance, livro=livro.get('livro'), quantidade=livro.get('quantidade'))
+        # calcula o total antes de retornar
+        instance.total = instance.calcular_total() 
+        instance.save() 
+        return instance
+
+    def update(self, instance, validated_data):
+        livros = validated_data.pop('pedidolivros_set')
+        instance.livros.clear()
+        for livro in livros:
+            PedidoLivros.objects.create(pedido=instance, livro=livro.get('livro'), quantidade=livro.get('quantidade'))
+        instance = super().update(instance, validated_data)
+        # calcula o total após ter atualizado os dados e retorna
+        instance = instance.calcular_total()  
+        instace.save()
+        return instance
+```

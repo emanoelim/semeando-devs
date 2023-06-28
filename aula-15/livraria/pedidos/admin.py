@@ -1,19 +1,19 @@
 from django.contrib import admin
 
-from pedidos.models import Pedido, PedidoLivros, Cupom
+from pedidos.models import Pedido, PedidoLivro, Cupom
 
 
-class PedidoLivrosInline(admin.TabularInline):
-    model = PedidoLivros
+class PedidoLivroInline(admin.TabularInline):
+    model = PedidoLivro
     extra = 1
 
 
 @admin.register(Pedido)
 class PedidoAdmin(admin.ModelAdmin):
     list_display = ('id', 'cliente', 'data')
-    inlines = [PedidoLivrosInline]
+    inlines = [PedidoLivroInline]
 
 
 @admin.register(Cupom)
 class CupomAdmin(admin.ModelAdmin):
-    list_display = ('id', 'nome', 'percentual_desconto', 'desconto_maximo')
+    list_display = ('id', 'nome')

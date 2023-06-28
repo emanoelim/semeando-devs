@@ -18,4 +18,3 @@ class Cliente(models.Model):
 
     def __str__(self) -> str:
         return f'{self.nome} - {self.cpf}'
-
