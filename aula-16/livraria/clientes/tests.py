@@ -15,6 +15,6 @@ class TestValidatorsCliente(TestCase):
 
     def test_valida_cpf_invalido(self):
         cpf_sem_mascara = '34248817081'  # último dígito deveria ser 0
-        with self.assertRaises(ValueError):
+        with self.assertRaises(ValidationError):
             validator_cpf(cpf_sem_mascara)
 
