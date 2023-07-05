@@ -37,8 +37,10 @@ class PedidoWriteSerializer(serializers.ModelSerializer):
         if not cupom:
             raise serializers.ValidationError('Cupom inválido.')
         
-        if cupom.quantidade_utilizada >= cupom.quantidade_maxima:
-            raise serializers.ValidationError('Cupom expirado.')
+        # quando é atualização existe um self.instance, quando é criação fica None
+        if not self.instance and self.instance.cupom == value:
+            if cupom.quantidade_utilizada >= cupom.quantidade_maxima:
+                raise serializers.ValidationError('Cupom expirado.')
         
         return cupom
 
