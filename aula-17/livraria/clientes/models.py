@@ -1,6 +1,7 @@
 from django.db import models
 from django.core.exceptions import ValidationError
 
+from services.cep_service import CepService
 from utils.utils import valida_cpf, mascara_cpf
 
 
@@ -18,3 +19,27 @@ class Cliente(models.Model):
 
     def __str__(self) -> str:
         return f'{self.nome} - {self.cpf}'
+    
+
+class Endereco(models.Model):
+    cliente = models.ForeignKey(Cliente, on_delete=models.CASCADE)
+    cep = models.CharField(max_length=8)
+    rua = models.CharField(max_length=255, null=True, blank=True)
+    numero = models.IntegerField()
+    cidade = models.CharField(max_length=255, null=True, blank=True)
+    uf = models.CharField(max_length=2, null=True, blank=True)
+
+    def preencher_endereco(self):
+        service = CepService()
+        try:
+            endereco = service.consultar_cep(self.cep)
+            self.rua = endereco.get('logradouro')
+            self.cidade = endereco.get('localidade')
+            self.uf = endereco.get('uf')
+        except Exception:
+            pass
+        self.save()
+
+
+    def __str__(self) -> str:
+        return f'{self.cliente.nome}'
