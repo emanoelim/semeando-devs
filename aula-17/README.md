@@ -535,8 +535,14 @@ Este tipo de teste pode ser chamado sempre que precisarmos testar algum endpoint
 
 ## Atividade
 
+### Endereço
+
 - Criar uma função valida_cep que valida se uma string é um cep composto por 8 números.
 - Criar testes para a função.
 - Utilizar a função no serializer para evitar o cadastro com ceps inválidos.
 - Criar um teste de endpoint para verificar se o endpoint está retornando um erro 400 e uma mensagem adequada para quando o endpoint for chamado com um cep inválido.
 
+### Cliente
+
+- Hoje o sistema está permitindo cadastrar clientes com cpfs repetidos, então adicionar no serializer (write, se houverem 2) uma validação para dar um erro quando o usuário tentar cadastrar um cpf que já existe.
+- Criar os testes para o endpoint do cliente, testando as duas situações: cadastro com cpf novo, retornando sucesso e cadastro com cpf que já existe, retornando erro.
