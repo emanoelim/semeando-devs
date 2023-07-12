@@ -537,6 +537,7 @@ Este tipo de teste pode ser chamado sempre que precisarmos testar algum endpoint
 
 ### Endereço
 
+- Testar o update do endereço pra ver se está preenchendo os dados corretamente.
 - Criar uma função valida_cep que valida se uma string é um cep composto por 8 números.
 - Criar testes para a função.
 - Utilizar a função no serializer para evitar o cadastro com ceps inválidos.
