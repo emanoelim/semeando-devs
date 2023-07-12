@@ -36,9 +36,9 @@ class Endereco(models.Model):
             self.rua = endereco.get('logradouro')
             self.cidade = endereco.get('localidade')
             self.uf = endereco.get('uf')
+            self.save()
         except Exception:
             pass
-        self.save()
 
 
     def __str__(self) -> str:
