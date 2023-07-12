@@ -381,9 +381,9 @@ Sendo assim vamos separar esta lógica em um método para ser reaproveitado. Ele
             self.rua = endereco.get('logradouro')
             self.cidade = endereco.get('localidade')
             self.uf = endereco.get('uf')
+            self.save()
         except Exception:
             pass
-        self.save()
 ```
 
 Agora basta sobreescrever o create e update para chamá-lo:
