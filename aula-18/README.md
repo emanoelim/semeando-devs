@@ -12,7 +12,7 @@ A estretégia de autenticação que vamos usar é o JWT (JSON Web Token). Ele é
 
 Até então só tinhamos enviado dados no "body" da request (o json com dados que o backend precisava para fazer um cadastro, por exemplo).
 
-O token será enviado no "header" ou "cabeçalho" da request. O header permite que o cliente e o servidor troquem informações adicionais em uma solicitação http. São informações que não estão relacionadas ao objeto (por exmeplo, o livro, o autor, o pedido).
+O token será enviado no "header" ou "cabeçalho" da request. O header permite que o cliente e o servidor troquem informações adicionais em uma solicitação http. São informações que não estão relacionadas ao objeto (por exemplo, o livro, o autor, o pedido).
 
 Existem diferentes tipos de header, sendo um deles o "Authorization" header. Sua sintaxe é:
 
@@ -44,7 +44,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjo
 
 ![token](https://images.ctfassets.net/cdy7uua7fh8z/7FI79jeM55zrNGd6QFdxnc/80a18597f06faf96da649f86560cbeab/encoded-jwt3.png)
 
-(https://auth0.com/docs/secure/tokens/json-web-tokens/json-web-token-structure)
+Referência: https://auth0.com/docs/secure/tokens/json-web-tokens/json-web-token-structure
 
 A primeira parte é o "header", contém informações sobre o tipo do token e o algoritmo usado para criptografar o conteúdo. Exemplo de header:
 
@@ -67,6 +67,8 @@ A segunda parte é o "payload", que contém as informações do usuário. Exempl
 ```
 
 A terceira parte é a "assinatura". Ela é gerada usando o header + payload + SECRET_KEY. É por isso que a SECRET_KEY do Django deve ficar protegida. Apenas quem possui esta chave consegue criar um token válido para fornecer ao cliente ou decodificar e validar um token que chega.
+
+Referência: https://simpleisbetterthancomplex.com/tutorial/2018/12/19/how-to-use-jwt-authentication-with-django-rest-framework.html
 
 ## Simplejwt
 
@@ -220,3 +222,75 @@ class SignUpSerializer(serializers.ModelSerializer):
             'last_name': {'required': True}
         }
 ```
+
+Primeiramente estamos colocando uma validação no e-mail, para não permitir cadastrar usuários com e-mails iguais.
+
+Normalmente quando o usuário vai se cadastrar no sistema, pedimos a senha 2 vezes, para garantir que ele digitou a senha certa. É por isso que adicionamos também no serializer o password_1 e o password_2. São campos que não estão na model, vamos usar apenas para o input dos dados, então vamos definir eles como write_only. Também queremos que a senha seja forte, então adicionamos na primeira delas adicionamos um validator do DRF. Ele vem desse import:
+
+```python
+from django.contrib.auth.password_validation import validate_password
+```
+
+Ele irá fazer várias validações como: tamanho da senha, senha muito comum, senha deve conter letras, etc.
+
+Por fim, na class Meta estamos adicionando extra_kwargs para dizer que queremos que o first_name e o last_name sejam obrigatórios, pois por padrão não são (você não precisou adicionar eles pra criar o usuário admin). 
+
+Agora vamos adicionar uma validação para garantir que as duas senhas digitadas são a mesma:
+
+```python
+    def validate(self, attrs):
+        if attrs['password_1'] != attrs['password_2']:
+            raise serializers.ValidationError('As senhas precisam ser iguais.')
+        return attrs
+```
+
+E por fim vamos sobreescrever o create:
+
+```python
+
+    def create(self, validated_data):
+        user = User.objects.create(
+            username=validated_data['username'],
+            email=validated_data['email'],
+            first_name=validated_data['first_name'],
+            last_name=validated_data['last_name']
+        )
+        user.set_password(validated_data['password_1'])
+        user.save()
+        return user
+```
+
+Primeiro criamos o usuário com username, email, first e last name. Depois adicionamos a senha através do método set_password, que já salva essa senha criptografada.
+
+Agora vamos criar a view:
+
+```python
+class SignUpView(CreateAPIView):
+    permission_classes = (AllowAny,)
+    queryset = User.objects.all()
+    serializer_class = SignUpSerializer
+```
+
+Para esta view não queremos obrigar a informar um token, pois o usuário ainda não existe. Então, vamos deixar permission_classes como "AllowAny", que deixa a view aberta.
+
+Por fim, a view precisa ser adicionada na url:
+
+```python
+...
+path('sign-up/', SignUpView.as_view(), name='sign_up'),
+...
+```
+
+O endpoint será listado no swagger e por ele será possível adicionar um usuário novo. Ao abrir o cadastro dele pelo Django admin, no campo senha, você verá:
+
+```different
+algoritmo: pbkdf2_sha256 iterações: 600000 salt: 51DxCx**************** hash: R3m0r9**************************************
+
+Senhas brutas não são armazenadas, então não há como visualizar a senha desse usuário, porém você pode mudar a senha usando esse form.
+```
+
+Agora já deve ser possível obter um token com este novo usuário.
+
+## Melhorias
+
+O cadastro de usuário que fizemos é bastante simples, não fizemos nada para validação de e-mail, recuperação e troca de senha. Na próxima aula veremos como fazer isto e também o cadastro de novos usuários de maneira mais automatizada com uma biblioteca.
