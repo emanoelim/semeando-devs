@@ -223,7 +223,7 @@ Este usuário já deve aparecer no admin. Acesse também a tabela http://127.0.0
 
 Ela é criada automaticamente ao fazero migrate após configuração das libs. Aqui você verá os e-mails de todos os usuários do sistema. O usuário recém cadastrado está com e-mail não verificado, pois o sistema não tinha esse requisito.
 
-## Avidando verificação de e-mail ao registrar
+## Enviando verificação de e-mail ao registrar
 
 Isto é feito adicionando duas novas variáveis no settings:
 
