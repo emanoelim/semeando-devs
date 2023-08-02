@@ -1,5 +1,18 @@
 # Aula 20
 
+
+## Aumentando tempo do token localmente
+
+Para facilitar os testes localmente, podemos aumentar o tempo de duração do token:
+
+```python
+# Adicionar no .env uma variável ACCESS_TOKEN_LIFETIME com o tempo desejado (em minutos)
+ACCESS_TOKEN_LIFETIME = config('ACCESS_TOKEN_LIFETIME', default=5, cast=int)
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=ACCESS_TOKEN_LIFETIME),
+}
+```
+
 ## Endpoint de usuários
 
 Vamos criar um endpoint com todos os usuários do sistema, que poderá ser utilizado por um administrador para listar usuários, ativar/inativar usuários, conceder permissões e etc. Vamos criar um novo app: `python manage.py startapp usuario`. Não esqueça de adicionar o novo app nos INSTALLED APPS.
