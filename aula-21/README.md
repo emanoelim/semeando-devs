@@ -3,13 +3,9 @@
 
 ## Web scraping
 
-
-
-## Scrapper para filmes
-
 Vamos desenvolver um scrapper  que irá nos ajudar a ver filmes em casa. 
 
-Ele irá recupera os filmes do Top 250 do IMDB (https://www.imdb.com/chart/top/?ref_=nv_mv_250) e procura links onde é possível ver cada um desses filmes no JustWatch (https://www.justwatch.com/).
+Ele irá recuperar os filmes do Top 250 do IMDB (https://www.imdb.com/chart/top/?ref_=nv_mv_250) e buscar links onde é possível ver cada um desses filmes no JustWatch (https://www.justwatch.com/).
  
 Para isso vamos utilizar a biblioteca BeautifulSoup: `pip install beautifulsoup4`
 
@@ -39,7 +35,7 @@ A primeira função encontra a primeira ocorrência de uma div com a class "offe
 
 Aqui estamos encontrando todas as divs que tenham a classe "offer". 
 
-Vamos usar este recuperso para encontrar no html o componente que tem a lista dos filmes. Inspecionando a página é possível ver que os filmes ficam em uma ul com diversas classes:
+Vamos usar este recurso para encontrar no html o componente que tem a lista dos filmes. Inspecionando a página é possível ver que os filmes ficam em uma ul com diversas classes:
 
 ![lista_filmes](figuras/lista_filmes.png)
 
