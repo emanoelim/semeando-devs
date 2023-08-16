@@ -171,4 +171,6 @@ EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
+ACCOUNT_ADAPTER = 'usuario.adapter.CustomAccountAdapter'
 
+URL_FRONTEND = config('URL_FRONTEND', default='http://localhost:4200')
