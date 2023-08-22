@@ -178,11 +178,13 @@ Quando USE_S3 estiver como True, os arquivos serão salvos no s3.
 
 4 - Criar as variáveis no .env para serem usados no settings:
 
+```different
 USE_S3 = 1
 AWS_ACCESS_KEY_ID = CHAVE_DE_ACESSO
 AWS_SECRET_ACCESS_KEY = CHAVE_DE_ACESSO_SECRETA
 AWS_STORAGE_BUCKET_NAME = semeando-devs
 AWS_LOCATION = sa-east-1
+```
 
 A região do bucket aparece aqui (seleção em azul):
 
@@ -287,7 +289,7 @@ Será necessário rodar o makemigrations e o migrate de novo.
 
 Se você fizer o mesmo processo com uma imagem que ficou na pasta "media" em vez de "private", você deve conseguir acessar a imagem normalmente. 
 
-## Atualizando o serializer o livro
+## Atualizando o serializer do livro
 
 Adicione o campo "imagem" no LivroReadSerializer. Ao fazer um GET livros, deve retornar a url da imagem, exemplo:
 
@@ -313,3 +315,5 @@ Ao copiar a url e acessar pelo navegador, agora deve ser possível abrir a image
 Adicione o campo "imagem" também no write serializer do livro. Para testar, você pode usar um programa como o postman ou insomnia. Exemplo do insomnia:
 
 ![25](figuras/25.png)
+
+Lembre de setar Authorization = Bearer token nos headers e mude o body para "Multipart form". No botão "add" você poderá adicionar quantos parâmetros forem necessários. Por padrão, eles são do tipo "text", mas clicando na setinha ao lado de cada campo é possível mudar seu tipo. Escolha o tipo "file" para poder anexar a imagem.
