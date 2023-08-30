@@ -12,10 +12,10 @@ class EmpresaView(ModelViewSet):
     ...
 
     @action(methods=['get'], detail=False, url_path='analise')
-    """
-    Retorna todas as análises que pertencem à uma empresa.
-    """
-    def get_analises_empresa(self, request, pk, *args, **kwargs): 
+    def get_analises_empresa(self, request, pk, *args, **kwargs):
+        """
+        Retorna todas as análises que pertencem à uma empresa.
+        """
         empresa = request.query_params.get('empresa')
         if not empresa:
             return Response(status=HTTP_400_BAD_REQUEST, data={'empresa': ['Informe a empresa.']})
